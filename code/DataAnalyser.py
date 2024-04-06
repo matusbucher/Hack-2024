@@ -53,4 +53,18 @@ def correlationCoefficient(date_1, date_2, measurement_1, measurement_2) -> floa
     # Nepytaj sa
     return sum([(date_1.data[start_year + i][measurement_1] - date_1_avg) * (date_2.data[start_year + i][measurement_2] - date_2_avg) for i in range(end_year - start_year + 1)]) / ((sqrt(sum([(date_1.data[start_year + i][measurement_1] - date_1_avg)**2 for i in range(end_year - start_year + 1)]))) * (sqrt(sum([(date_2.data[start_year + i][measurement_2] - date_2_avg)**2 for i in range(end_year - start_year + 1)]))))
 
+def biggestCorrelationCoefficient(date, dates, *measurements) -> tuple[str, float]:
+    biggest = ("None", 0)
+    for m in measurements:
+        for mm in measurements:
+            for day in dates:
+                if day != date:
+                    c = correlationCoefficient(date, day, m, mm)
+                    if c > biggest[1]:
+                        biggest = (f"{date} {day} {m} {mm}", c)
+    return biggest
+
+
+
+
 

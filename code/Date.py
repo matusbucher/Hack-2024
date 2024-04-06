@@ -23,6 +23,9 @@ class Date:
         self.wmoIndex = self.DEFAULT_WMO_INDEX
         self.data = dict()
 
+    def __repr__(self) -> str:
+        return f"{self.day:02}.{self.month:02}."
+
     def setWmoIndex(self, index) -> None:
         self.wmoIndex = index
     
