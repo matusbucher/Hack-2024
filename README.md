@@ -1,0 +1,1 @@
+Hack Kosice 2024
