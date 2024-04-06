@@ -5,7 +5,7 @@ class Program:
     """
     Field:
     data          All weather data imported from a json file
-    day           dictionary of instances of the Date class for each day of the year (omitting 29th of February lol)   
+    dates           dictionary of instances of the Date class for each day of the year (omitting 29th of February lol)   
     """
     def __init__(self, data):
         self.data = data
@@ -21,16 +21,16 @@ class Program:
             month += 1
 
     def globalMaxima(self): #Returns dict of global maxima for all measurements
-        return {m:DataAnalyser.globalMaximum(self.dates.values(), m) for m in self.measurements}
+        return {m:DataAnalyser.globalMaximum(self.dates, m) for m in self.measurements}
     
     def globalMinima(self): #Returns dict of global minima for all measurements
-        return {m:DataAnalyser.globalMinimum(self.dates.values(), m) for m in self.measurements}
+        return {m:DataAnalyser.globalMinimum(self.dates, m) for m in self.measurements}
     
     def globalMaximumDerivative(self): #Returns dict of global maxima of derivatives for all measurements
-        return {m:DataAnalyser.globalMaximumDerivative(self.dates.values(), m, 1) for m in self.measurements}
+        return {m:DataAnalyser.globalMaximumDerivative(self.dates, m, 1) for m in self.measurements}
     
     def globalMinimumDerivative(self): #Returns dict of global minima of derivatives for all measurements
-        return {m:DataAnalyser.globalMaximumDerivative(self.dates.values(), m, 0) for m in self.measurements}
+        return {m:DataAnalyser.globalMaximumDerivative(self.dates, m, 0) for m in self.measurements}
     
     def globalMaximumCorrelation(self): #Returns dict of global biggest cor. coef. for all days
-        return {d:DataAnalyser.biggestCorrelationCoefficient(d, self.dates.values(), self.measurements) for d in self.dates.values()}
+        return {d:DataAnalyser.biggestCorrelationCoefficient(d, self.dates, self.measurements) for d in self.dates}
