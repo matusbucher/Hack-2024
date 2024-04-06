@@ -1,3 +1,5 @@
+from math import sqrt
+
 class Date:
 
     """
@@ -19,41 +21,44 @@ class Date:
 
     def __repr__(self) -> str:
         return f"{self.day:02}.{self.month:02}."
-
-    def setWmoIndex(self, index) -> None:
-        self.wmoIndex = index
     
-    def loadData(self, data, *measurements):
+    def loadData(self, data, *measurements) -> None:
         _year = self.beginYear
         while _year <= self.endYear:
             if _year in data[f"{self.day:02}.{self.month:02}."]:
                 self.data[_year] = {m:data[f"{self.day:02}.{self.month:02}."][_year][m] for m in measurements}
-                _year += 1
-        print(self.data)
+            _year += 1
 
     def weightedAverage(self, measurement) -> float:
-        numOfYears = self.endYear - self.beginYear + 1
         weightsDifference = 1
-        rateIncrement = weightsDifference / (numOfYears - 1)
-        divisionCoefficient = numOfYears + rateIncrement * ((numOfYears - 1) * (numOfYears / 2))
-
+        rateIncrement = weightsDifference / (self.endYear - self.beginYear)
         sum = 0
+        num = 0
         currentCoefficient = 1
         for year in range(self.beginYear, self.endYear + 1):
             if year in self.data:
                 sum += self.data[year][measurement] * currentCoefficient
-                currentCoefficient += rateIncrement
+                num += 1
+            currentCoefficient += rateIncrement
+        return sum / (num + rateIncrement * ((num - 1) * (num / 2)))
 
-        return (sum / divisionCoefficient)
-
-    def average(self, measuremnet) -> float:
-        numOfYears = self.endYear - self.beginYear + 1
+    def average(self, measurement) -> float:
         sum = 0
+        num = 0
         for year in range(self.beginYear, self.endYear + 1):
             if year in self.data:
-                sum += self.data[year][measuremnet]
-
-        return sum / numOfYears
+                sum += self.data[year][measurement]
+                num += 1
+        return sum / num
+    
+    def averageFromYears(self, measurement, years):
+        sum = 0
+        num = 0
+        for year in years:
+            if year in self.data:
+                sum += self.data[year][measurement]
+                num += 1
+        return sum / num
 
     def variance(self, measurement) -> float:
         average = self.average(measurement)
@@ -63,6 +68,9 @@ class Date:
             if year in self.data:
                 sum += pow(self.data[year][measurement] - average, 2)
         return sum / numOfYears
+    
+    def standardDeviation(self, measurement) -> float:
+        return sqrt(self.variance(measurement))
 
     # TODO dalsie metody
 
