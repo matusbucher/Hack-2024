@@ -27,8 +27,12 @@ class Date:
     def setWmoIndex(self, index):
         self.wmoIndex = index
     
-    def loadData(self, measurements):
-        pass
+    def loadData(self, data, *measurements):
+        self.year = self.beginYear
+        while self.year != self.endYear:
+            self.data[self.year] = {m:data[f"{self.day:02}.{self.month:02}."][self.year][m] for m in measurements}
+            self.year += 1
+
 
     def weightedAverage(self, measurement):
         numOfYears = self.endYear - self.beginYear + 1
