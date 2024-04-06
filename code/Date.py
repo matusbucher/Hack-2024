@@ -26,7 +26,7 @@ class Date:
         year = self.beginYear
         while year <= self.endYear:
             if year in [int(y) for y in data[f"{self.day:02}.{self.month:02}."].keys()]:
-                self.data[year] = {m:data[f"{self.day:02}.{self.month:02}."][year][m] for m in measurements}
+                self.data[year] = {m:data[f"{self.day:02}.{self.month:02}."][str(year)][m] for m in measurements}
             year += 1
 
     def weightedAverage(self, measurement) -> float:
