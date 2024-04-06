@@ -32,7 +32,6 @@ class Date:
             self.data[self.year] = {m:data[f"{self.day:02}.{self.month:02}."][self.year][m] for m in measurements}
             self.year += 1
 
-
     def weightedAverage(self, measurement) -> float:
         numOfYears = self.endYear - self.beginYear + 1
         weightsDifference = 1
@@ -47,6 +46,24 @@ class Date:
                 currentCoefficient += rateIncrement
 
         return (sum / divisionCoefficient)
+
+    def average(self, measuremnet) -> float:
+        numOfYears = self.endYear - self.beginYear + 1
+        sum = 0
+        for year in range(self.beginYear, self.endYear + 1):
+            if year in self.data:
+                sum += self.data[year][measuremnet]
+
+        return sum / numOfYears
+
+    def variance(self, measurement) -> float:
+        average = self.average(measurement)
+        numOfYears = self.endYear - self.beginYear + 1
+        sum = 0
+        for year in range(self.beginYear, self.endYear + 1):
+            if year in self.data:
+                sum += pow(self.data[year][measurement] - average, 2)
+        return sum / numOfYears
 
     def setData(self, data):
         self.data = data
