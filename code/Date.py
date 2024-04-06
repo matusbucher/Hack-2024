@@ -22,7 +22,7 @@ class Date:
     def __repr__(self) -> str:
         return f"{self.day:02}.{self.month:02}."
     
-    def loadData(self, data: dict[str,dict[int,dict[str,int]]], *measurements) -> None:
+    def loadData(self, data, *measurements) -> None:
         year = self.beginYear
         while year <= self.endYear:
             if year in [int(y) for y in data[f"{self.day:02}.{self.month:02}."].keys()]:
