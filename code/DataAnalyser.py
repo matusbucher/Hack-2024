@@ -1,4 +1,5 @@
 from Date import *
+from math import sqrt
 
 def globalMaximum(dates, measurement) -> tuple[Date, float]:
     if len(dates) == 0:
@@ -43,3 +44,13 @@ def globalMaximumDerivative(dates, measurement, positive) -> tuple[Date, float]:
             maximum = dates[i+1].weightedAverage(measurement) - dates[i].weightedAverage(measurement)
 
     return (date, maximum)
+
+def correlationCoefficient(date_1, date_2, measurement_1, measurement_2) -> float:
+    date_1_avg = date_1.weightedAverage(measurement_1)
+    date_2_avg = date_2.weightedAverage(measurement_2)
+    start_year = 2000
+    end_year = 2023
+    # Nepytaj sa
+    return sum([(date_1.data[start_year + i][measurement_1] - date_1_avg) * (date_2.data[start_year + i][measurement_2] - date_2_avg) for i in range(end_year - start_year + 1)]) / ((sqrt(sum([(date_1.data[start_year + i][measurement_1] - date_1_avg)**2 for i in range(end_year - start_year + 1)]))) * (sqrt(sum([(date_2.data[start_year + i][measurement_2] - date_2_avg)**2 for i in range(end_year - start_year + 1)]))))
+
+
