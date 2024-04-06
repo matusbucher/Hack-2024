@@ -27,10 +27,10 @@ class Date:
         self.wmoIndex = index
     
     def loadData(self, data, *measurements):
-        self.year = self.beginYear
-        while self.year > self.endYear:
-            self.data[self.year] = {m:data[f"{self.day:02}.{self.month:02}."][self.year][m] for m in measurements}
-            self.year += 1
+        _year = self.beginYear
+        while _year > self.endYear:
+            self.data[_year] = {m:data[f"{self.day:02}.{self.month:02}."][_year][m] for m in measurements}
+            _year += 1
 
     def weightedAverage(self, measurement) -> float:
         numOfYears = self.endYear - self.beginYear + 1
@@ -66,22 +66,5 @@ class Date:
         return sum / numOfYears
 
     # TODO dalsie metody
-
-class Program:
-    """
-    Field:
-    data          All weather data imported from a json file
-    day           dictionary of instances of the Date class for each day of the year (omitting 29th of February lol)   
-    """
-    def __init__(self, data):
-        self.data = data
-        self._day_counts = [31,28,31,30,31,30,31,31,30,31,30,31]
-        self.day = {}
-        self._month = 1
-        for num in self._day_counts:
-            for d in range(num):
-                self.day[f"{d+1}.{self._month:02}."] = Date(d+1, self._month, 2000, 2023)
-                self.day[f"{d+1}.{self._month:02}."].loadData(self.data, "cloud_cover", "temperature", "wind_speed", "rain_mm", "snow_mm")
-            self._month += 1
 
 
