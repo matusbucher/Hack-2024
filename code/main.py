@@ -5,7 +5,7 @@ class Program:
     """
     Field:
     data          All weather data imported from a json file
-    dates           dictionary of instances of the Date class for each day of the year (omitting 29th of February lol)   
+    dates         dictionary of instances of the Date class for each day of the year (omitting 29th of February lol)   
     """
     def __init__(self, data):
         self.data = data

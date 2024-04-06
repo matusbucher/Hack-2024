@@ -22,12 +22,12 @@ class Date:
     def __repr__(self) -> str:
         return f"{self.day:02}.{self.month:02}."
     
-    def loadData(self, data, *measurements) -> None:
-        _year = self.beginYear
-        while _year <= self.endYear:
-            if _year in data[f"{self.day:02}.{self.month:02}."]:
-                self.data[_year] = {m:data[f"{self.day:02}.{self.month:02}."][_year][m] for m in measurements}
-            _year += 1
+    def loadData(self, data: dict[str,dict[int,dict[str,int]]], *measurements) -> None:
+        year = self.beginYear
+        while year <= self.endYear:
+            if year in [int(y) for y in data[f"{self.day:02}.{self.month:02}."].keys()]:
+                self.data[year] = {m:data[f"{self.day:02}.{self.month:02}."][year][m] for m in measurements}
+            year += 1
 
     def weightedAverage(self, measurement) -> float:
         weightsDifference = 1
@@ -71,7 +71,3 @@ class Date:
     
     def standardDeviation(self, measurement) -> float:
         return sqrt(self.variance(measurement))
-
-    # TODO dalsie metody
-
-
