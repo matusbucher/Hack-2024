@@ -15,7 +15,6 @@ class Date:
         self.month = month
         self.beginYear = beginYear
         self.endYear = endYear
-        self.wmoIndex = self.DEFAULT_WMO_INDEX
         self.data = dict()
 
     def __repr__(self) -> str:
@@ -27,8 +26,9 @@ class Date:
     def loadData(self, data, *measurements):
         _year = self.beginYear
         while _year > self.endYear:
-            self.data[_year] = {m:data[f"{self.day:02}.{self.month:02}."][_year][m] for m in measurements}
-            _year += 1
+            if _year in data:
+                self.data[_year] = {m:data[f"{self.day:02}.{self.month:02}."][_year][m] for m in measurements}
+                _year += 1
 
     def weightedAverage(self, measurement) -> float:
         numOfYears = self.endYear - self.beginYear + 1
