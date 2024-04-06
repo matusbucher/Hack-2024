@@ -15,8 +15,8 @@ class Program:
         _month = 1
         for num in _day_counts:
             for d in range(num):
-                self.day[f"{d+1}.{_month:02}."] = Date(d+1, self._month, 2000, 2023)
-                self.day[f"{d+1}.{_month:02}."].loadData(self.data, self.measurements)
+                self.day[f"{d+1:02}.{_month:02}."] = Date(d+1, _month, 2000, 2023)
+                self.day[f"{d+1:02}.{_month:02}."].loadData(self.data, self.measurements)
             _month += 1
 
     def globalMaxima(self): #Returns dict of global maxima for all measurements
