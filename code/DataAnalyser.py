@@ -61,7 +61,7 @@ def biggestCorrelationCoefficient(date, dates, *measurements) -> tuple[str, floa
                 if day != date:
                     c = correlationCoefficient(date, day, m, mm)
                     if c > biggest[1]:
-                        biggest = (f"{date} {day} {m} {mm}", c)
+                        biggest = (f"{day} {m} {mm}", c)
     return biggest
 
 

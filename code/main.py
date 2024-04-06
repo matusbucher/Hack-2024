@@ -30,3 +30,6 @@ class Program:
     
     def globalMinimumDerivative(self): #Returns dict of global minima of derivatives for all measurements
         return {m:DataAnalyser.globalMaximumDerivative(self.day.values(), m, 0) for m in self.measurements}
+    
+    def globalMaximumCorrelation(self): #Returns dict of global biggest cor. coef. for all days
+        return {d:DataAnalyser.biggestCorrelationCoefficient(d, self.day.values(), self.measurements) for d in self.day.values()}
