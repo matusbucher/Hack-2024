@@ -23,4 +23,10 @@ class Program:
         return {m:DataAnalyser.globalMaximum(self.day.values(), m) for m in self.measurements}
     
     def globalMinima(self): #Returns dict of global minima for all measurements
-        return {m:DataAnalyser.globalMaximum(self.day.values(), m) for m in self.measurements}
+        return {m:DataAnalyser.globalMinimum(self.day.values(), m) for m in self.measurements}
+    
+    def globalMaximumDerivative(self): #Returns dict of global maxima of derivatives for all measurements
+        return {m:DataAnalyser.globalMaximumDerivative(self.day.values(), m, 1) for m in self.measurements}
+    
+    def globalMinimumDerivative(self): #Returns dict of global minima of derivatives for all measurements
+        return {m:DataAnalyser.globalMaximumDerivative(self.day.values(), m, 0) for m in self.measurements}
