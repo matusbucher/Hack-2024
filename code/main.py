@@ -10,13 +10,13 @@ class Program:
     def __init__(self, data):
         self.data = data
         self.measurements = ["cloud_cover", "temperature", "wind_speed", "rain_mm", "snow_mm"]
-        _day_counts = [31,28,31,30,31,30,31,31,30,31,30,31]
+        dayCounts = [31,28,31,30,31,30,31,31,30,31,30,31]
         self.dates = list()
         month = 1
-        for num in _day_counts:
+        for num in dayCounts:
             for d in range(num):
                 date = Date(d+1, month, 2000, 2023)
-                date.loadData(self.dates, *self.measurements)
+                date.loadData(self.data, *self.measurements)
                 self.dates.append(date)
             month += 1
 
