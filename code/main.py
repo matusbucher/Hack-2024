@@ -23,8 +23,18 @@ class Program:
     def globalMaxima(self): #Returns dict of global maxima for all measurements
         return {m:DataAnalyser.globalMaximum(self.dates, m) for m in self.measurements}
     
+    def monthMaxima(self, month: int): # returns dict of moth maxima for all measurements
+        dayCounts = [31,28,31,30,31,30,31,31,30,31,30,31]
+        month -= 1
+        return {m:DataAnalyser.globalMaximum(self.dates[sum(dayCounts[:month]):sum(dayCounts[:month + 1])], m) for m in self.measurements}
+    
     def globalMinima(self): #Returns dict of global minima for all measurements
         return {m:DataAnalyser.globalMinimum(self.dates, m) for m in self.measurements}
+    
+    def monthMinima(self, month: int): # returns dict of moth maxima for all measurements
+        dayCounts = [31,28,31,30,31,30,31,31,30,31,30,31]
+        month -= 1
+        return {m:DataAnalyser.globalMinimum(self.dates[sum(dayCounts[:month]):sum(dayCounts[:month + 1])], m) for m in self.measurements}
     
     def globalMaximumDerivative(self): #Returns dict of global maxima of derivatives for all measurements
         return {m:DataAnalyser.globalMaximumDerivative(self.dates, m, 1) for m in self.measurements}
