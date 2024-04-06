@@ -1,5 +1,3 @@
-import requests
-
 class Date:
 
     """
@@ -11,9 +9,6 @@ class Date:
     wmoIndex    WMO synop index of the station
     data        dictionary with data of all measurements for every year from range [beginYear - endYear] (both including)
     """
-
-    URL_DATA_SERVER = "https://ogimet.com/display_synops2.php?lang=en"
-    DEFAULT_WMO_INDEX = 11968
 
     def __init__(self, day, month, beginYear, endYear) -> None:
         self.day = day
