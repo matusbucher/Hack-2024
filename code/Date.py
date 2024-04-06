@@ -65,7 +65,4 @@ class Date:
                 sum += pow(self.data[year][measurement] - average, 2)
         return sum / numOfYears
 
-    def setData(self, data):
-        self.data = data
-
     # TODO dalsie metody
