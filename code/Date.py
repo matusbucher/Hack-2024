@@ -1,4 +1,17 @@
+import requests
+
 class Date:
+
+    """
+    Field:
+    day         day of the date (as integer)
+    month       month of the date (as integer)
+    beginYear   first year of the processed data
+    endYear     last year of the processed data
+    wmoIndex    WMO synop index of the station
+    data        dictionary with data of all measurements
+                note: should have data for all year from range [beginYear - endYear] (both including)
+    """
 
     URL_DATA_SERVER = "https://ogimet.com/display_synops2.php?lang=en"
     DEFAULT_WMO_INDEX = 11968
@@ -17,7 +30,22 @@ class Date:
     def loadData(self, measurements):
         pass
 
-    def weightedAverageGraph(self):
-        pass
+    def weightedAverage(self, measurement):
+        numOfYears = self.endYear - self.beginYear + 1
+        weightsDifference = 1
+        rateIncrement = weightsDifference / (numOfYears - 1)
+        divisionCoefficient = numOfYears + rateIncrement * ((numOfYears - 1) * (numOfYears / 2))
 
-    #TODO dalsie metody
+        sum = 0
+        currentCoefficient = 1
+        for year in range(self.beginYear, self.endYear + 1):
+            if year in self.data:
+                sum += self.data[year][measurement] * currentCoefficient
+                currentCoefficient += rateIncrement
+
+        return (sum / divisionCoefficient)
+
+    def setData(self, data):
+        self.data = data
+
+    # TODO dalsie metody
