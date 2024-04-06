@@ -31,16 +31,26 @@ class Program:
     def globalMinima(self): #Returns dict of global minima for all measurements
         return {m:DataAnalyser.globalMinimum(self.dates, m) for m in self.measurements}
     
-    def monthMinima(self, month: int): # returns dict of moth maxima for all measurements
+    def monthMinima(self, month: int): # returns dict of moth minima for all measurements
         dayCounts = [31,28,31,30,31,30,31,31,30,31,30,31]
         month -= 1
         return {m:DataAnalyser.globalMinimum(self.dates[sum(dayCounts[:month]):sum(dayCounts[:month + 1])], m) for m in self.measurements}
     
     def globalMaximumDerivative(self): #Returns dict of global maxima of derivatives for all measurements
-        return {m:DataAnalyser.globalMaximumDerivative(self.dates, m, 1) for m in self.measurements}
+        return {m:DataAnalyser.globalMaximumDerivative(self.dates, m, True) for m in self.measurements}
+    
+    def monthMaximumDerivate(self, month: int): #Returns dict of month maxima of derivatives for all measurements
+        dayCounts = [31,28,31,30,31,30,31,31,30,31,30,31]
+        month -= 1
+        return {m:DataAnalyser.globalMaximumDerivative(self.dates[sum(dayCounts[:month]):sum(dayCounts[:month + 1])], m, True) for m in self.measurements}
     
     def globalMinimumDerivative(self): #Returns dict of global minima of derivatives for all measurements
-        return {m:DataAnalyser.globalMaximumDerivative(self.dates, m, 0) for m in self.measurements}
+        return {m:DataAnalyser.globalMaximumDerivative(self.dates, m, False) for m in self.measurements}
+    
+    def monthMinimumDerivate(self, month: int): #Returns dict of month maxima of derivatives for all measurements
+        dayCounts = [31,28,31,30,31,30,31,31,30,31,30,31]
+        month -= 1
+        return {m:DataAnalyser.globalMaximumDerivative(self.dates[sum(dayCounts[:month]):sum(dayCounts[:month + 1])], m, False) for m in self.measurements}
     
     def globalMaximumCorrelation(self): #Returns dict of global biggest cor. coef. for all days
         return {d:DataAnalyser.biggestCorrelationCoefficient(d, self.dates, self.measurements) for d in self.dates}
