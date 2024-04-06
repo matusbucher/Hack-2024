@@ -9,8 +9,7 @@ class Date:
     beginYear   first year of the processed data
     endYear     last year of the processed data
     wmoIndex    WMO synop index of the station
-    data        dictionary with data of all measurements
-                note: should have data for all year from range [beginYear - endYear] (both including)
+    data        dictionary with data of all measurements for every year from range [beginYear - endYear] (both including)
     """
 
     URL_DATA_SERVER = "https://ogimet.com/display_synops2.php?lang=en"
@@ -24,13 +23,13 @@ class Date:
         self.wmoIndex = self.DEFAULT_WMO_INDEX
         self.data = dict()
 
-    def setWmoIndex(self, index):
+    def setWmoIndex(self, index) -> None:
         self.wmoIndex = index
     
     def loadData(self, measurements):
         pass
 
-    def weightedAverage(self, measurement):
+    def weightedAverage(self, measurement) -> float:
         numOfYears = self.endYear - self.beginYear + 1
         weightsDifference = 1
         rateIncrement = weightsDifference / (numOfYears - 1)

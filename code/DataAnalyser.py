@@ -1,0 +1,3 @@
+from Date import *
+
+#TODO porovnavanie dvojic datumov...
