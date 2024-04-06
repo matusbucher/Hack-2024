@@ -29,7 +29,7 @@ class Date:
     
     def loadData(self, data, *measurements):
         self.year = self.beginYear
-        while self.year != self.endYear:
+        while self.year > self.endYear:
             self.data[self.year] = {m:data[f"{self.day:02}.{self.month:02}."][self.year][m] for m in measurements}
             self.year += 1
 
