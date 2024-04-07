@@ -54,7 +54,7 @@ def correlationCoefficient(date_1: Date, date_2: Date, measurement_1: str, measu
     date_2_diffs = [(date_2.data[year][measurement_2] - date_2_avg) for year in years]
     numerator = sum([date_1_diffs[i] * date_2_diffs[i] for i in range(len(years))])
     denominator = sqrt(sum(diff**2 for diff in date_1_diffs) * sum(diff**2 for diff in date_2_diffs))
-    
+
     if denominator == 0:
         return 0
     return numerator / denominator
@@ -69,3 +69,24 @@ def biggestCorrelationCoefficient(date: Date, dates: Collection[Date], *measurem
                     if abs(r) > abs(biggest[3]):
                         biggest = (d, m1, m2, r)
     return biggest
+
+def hasCorrelationToDates(date: Date, dates: Collection[Date], measurement_1: str, measurement_2: str, minAbsCorrelCoef: float, minPercentage: float) -> tuple[bool, float]:
+    if minAbsCorrelCoef < -1 or minAbsCorrelCoef > 1 or minPercentage > 1 or minPercentage <= 0.5:
+        return (False, 0)
+    
+    numPositiveCorrelation = 0
+    numNegativeCorrelation = 0
+    sumCorrelCoef = 0
+    for d in dates:
+        r = correlationCoefficient(date, d, measurement_1, measurement_2)
+        sumCorrelCoef += r
+        if abs(r) >= minAbsCorrelCoef:
+            if r > 0:
+                numPositiveCorrelation += 1
+            elif r < 0:
+                numNegativeCorrelation += 1
+    avgCorrelCoef = sumCorrelCoef / len(dates)
+    
+    if abs(avgCorrelCoef) >= minAbsCorrelCoef and (numPositiveCorrelation / len(dates) >= minPercentage or numNegativeCorrelation / len(dates) >= minPercentage):
+        return (True, avgCorrelCoef)
+    return (False, 0)
