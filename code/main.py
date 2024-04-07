@@ -1,7 +1,7 @@
 from Date import Date
 import DataAnalyser
-from random import choice
 import prompter
+from json import loads
 
 class Program:
     """
@@ -70,21 +70,17 @@ class Program:
         return d
     
     def get_lore(self, date: Date):
-        s_date = f"{date.day:02}.{date.month:02}."
-        generator = prompter.LoreGenerator(s_date)
-
         dayCounts = [31,28,31,30,31,30,31,31,30,31,30,31]
-        ai = prompter.LoreGenerator(s_date)
+        ai = prompter.LoreGenerator(date)
 
         maxima = self.globalMaxima()
-        print(maxima)
         minima = self.globalMinima()
 
         for meas in self.measurements:
-            if maxima[meas][0].get_str() == s_date:
+            if maxima[meas][0].get_str() == date.get_str():
                 return ai.prompt_extreme(meas, True, True)
             
-            if minima[meas][0].get_str() == s_date:
+            if minima[meas][0].get_str() == date.get_str():
                 return ai.prompt_extreme(meas, True, False)
         
         
@@ -97,30 +93,30 @@ class Program:
         month_minima = self.monthMinima(date.month)
 
         for meas in self.measurements:
-            if month_maxima[meas][0].get_str() == s_date:
+            if month_maxima[meas][0].get_str() == date.get_str():
                 return ai.prompt_extreme(meas, False, True)
             
-            if month_minima[meas][0].get_str() == s_date:
+            if month_minima[meas][0].get_str() == date.get_str():
                 return ai.prompt_extreme(meas, False, False)
         
         der_maxima = self.globalMaximumDerivative()
         der_minima = self.globalMinimumDerivative()
 
         for meas in self.measurements:
-            if der_maxima[meas][0].get_str() == s_date:
+            if der_maxima[meas][0].get_str() == date.get_str():
                 return ai.prompt_growth_extreme(meas, True, True)
             
-            if der_minima[meas][0].get_str() == s_date:
+            if der_minima[meas][0].get_str() == date.get_str():
                 return ai.prompt_growth_extreme(meas, False, True)
         
         month_der_maxima = self.monthMaximumDerivate(date.month)
         month_der_minima = self.monthMinimumDerivate(date.month)
 
         for meas in self.measurements:
-            if month_der_maxima[meas][0].get_str() == s_date:
+            if month_der_maxima[meas][0].get_str() == date.get_str():
                 return ai.prompt_growth_extreme(meas, True, False)
             
-            if month_der_minima[meas][0].get_str() == s_date:
+            if month_der_minima[meas][0].get_str() == date.get_str():
                 return ai.prompt_growth_extreme(meas, False, False)
         
         for meas1 in self.measurements:
@@ -143,5 +139,16 @@ class Program:
         return "last cor"
 
 if __name__ == "__main__":
-    p = Program(None)
-    p.get_lore(Date(1, 1, 2000, 2024).loadData(None))
+    j = open("data/model_data1.json", "r")
+    json_data = loads(j.read())
+    data = {}
+    tmp = {}
+    for date, year in json_data.items():
+        for y, r in year.items():
+            tmp[int(y)] = r
+        data[date] = tmp.copy()
+
+    p = Program(data)
+    prompt = p.get_lore(Date(13, 7, 2000, 2024).loadData(data, *p.measurements))
+
+    print(prompt)

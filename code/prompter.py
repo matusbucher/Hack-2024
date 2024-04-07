@@ -1,6 +1,7 @@
 #import openai
 from json import loads
 from random import randrange
+from Date import Date
 
 #  WARNING, uncommenting loses money
 '''
@@ -31,10 +32,11 @@ class Fakt:
 
 
 class LoreGenerator:
-    def __init__(self, day: str):
-        self.day = day
+    def __init__(self, date: Date):
+        self.date = date
+        self.date_str = date.get_str()
         self.lore = ""
-        self.name = get_nameday(day)
+        self.name = get_nameday(self.date_str)
 
     def get_ai_response(self, prompt):
         pass
@@ -53,7 +55,7 @@ class LoreGenerator:
         else:
             direction = "decrease"
 
-        return f"Give me a short weather lore expressing that after the day of {self.name}'s nameday ({self.day}), the {text} should {direction} drastically, be creative, do not use the word nameday."
+        return f"Give me a short weather lore expressing that after the day of {self.name}'s nameday ({self.date_str}), the {text} should {direction} drastically, be creative, do not use the word nameday."
 
     def prompt_extreme(self, attribute, is_period_year: bool, is_maximum: bool) -> str:
         max_attribute_texts = {"cloud_cover": "is the least sunny one",
@@ -70,7 +72,7 @@ class LoreGenerator:
         if is_period_year:
             time = "the year"
         else:
-            time = MONTHS[int(self.day[3:-1])]
+            time = MONTHS[self.date.month - 1]
 
         if is_maximum:
             text = max_attribute_texts[attribute]
@@ -114,9 +116,6 @@ class LoreGenerator:
         if use_verses:
             prompt += " Make it a four verse poem. Do not write more than four verses."
         return prompt
-
-
-generator = LoreGenerator("07.04.")
 
 # print(generator.prompt_correlation_pair("cloud_cover", "temperature", 5, True, 1))
 # print(generator.prompt_extreme("temperature", True, False))
