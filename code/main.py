@@ -55,7 +55,7 @@ class Program:
         return {m:DataAnalyser.globalMaximumDerivative(self.dates[sum(dayCounts[:month]):sum(dayCounts[:month + 1])], m, False) for m in self.measurements}
     
     def globalMaximumCorrelation(self): #Returns dict of global biggest cor. coef. for all days
-        return {d:DataAnalyser.biggestCorrelationCoefficient(d, self.dates, self.measurements) for d in self.dates}
+        return {d:DataAnalyser.biggestCorrelationCoefficient(d, self.dates, *self.measurements) for d in self.dates}
     
     def day_variences(self, date: Date): #Returns dict of measurments[tuple[bool, avg for day]], true - stable, false - unstable
         magic_coefs = {"cloud_cover": 0.1, "temperature": 3, "wind_speed": 3, "rain_mm": 0.2, "snow_mm": 0.2}
@@ -132,7 +132,7 @@ class Program:
                 if corelation_month[0]:
                     return ai.prompt_correlation_pair(meas1, meas2, date.month, corelation_month[1] > 0, 1)
                 
-        corelation_day = DataAnalyser.biggestCorrelationCoefficient(date, self.dates, self.measurements)
+        corelation_day = DataAnalyser.biggestCorrelationCoefficient(date, self.dates, *self.measurements)
 
         return ai.prompt_correlation_pair(corelation_day[1], corelation_day[2], corelation_day[0], corelation_day[3] > 0, 0)
 
