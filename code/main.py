@@ -135,9 +135,9 @@ class Program:
                 
         corelation_day = DataAnalyser.biggestCorrelationCoefficient(date, self.dates, *self.measurements)
 
-        #last_d = corelation_day[0]
-        #last_last_date = f"{last_d.day:02}.{last_d.month:02}."
+        last_d = corelation_day[0]
+        last_last_date = f"{last_d.day:02}.{last_d.month:02}."
 
 
-        #return ai.prompt_correlation_pair(corelation_day[1], corelation_day[2], last_last_date, corelation_day[3] > 0, 0)
+        return ai.prompt_correlation_pair(corelation_day[1], corelation_day[2], last_last_date, corelation_day[3] > 0, 0)
         return "last cor"
