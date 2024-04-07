@@ -2,6 +2,7 @@ from Date import Date
 import data_analyser
 import prompter
 from json import loads
+from random import choice
 
 class Program:
     """
@@ -84,10 +85,10 @@ class Program:
                 return ai.prompt_extreme(meas, True, False)
         
         
-        # variences = self.day_variences(date)
-        #if variences != {}:
-        #    meas = choice(list(variences.keys()))
-        #    return ai.prompt_variability(meas, variences[meas][0], variences[meas][1])
+        variences = self.day_variences(date)
+        if variences != {}:
+            meas = choice(list(variences.keys()))
+            return ai.prompt_variability(meas, variences[meas][0], variences[meas][1])
         
         month_maxima = self.monthMaxima(date.month)
         month_minima = self.monthMinima(date.month)
@@ -138,7 +139,7 @@ class Program:
         return ai.prompt_correlation_pair(corelation_day[1], corelation_day[2], last_last_date, corelation_day[3] > 0, 0)
 
 if __name__ == "__main__":
-    j = open("data/model_data1.json", "r")
+    j = open("../data/model_data1.json", "r")
     json_data = loads(j.read())
     data = {}
     tmp = {}
@@ -148,6 +149,6 @@ if __name__ == "__main__":
         data[date] = tmp.copy()
 
     p = Program(data)
-    prompt = p.get_lore(Date(13, 7, 2000, 2024).loadData(data, *p.measurements))
+    prompt = p.get_lore(Date(21, 9, 2000, 2024).loadData(data, *p.measurements))
 
     print(prompt)

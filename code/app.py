@@ -1,6 +1,7 @@
 from flask import Flask, request
-import main
+from main import Program
 from json import loads
+from Date import Date
 
 app = Flask("Weather lorAI")
 
@@ -9,17 +10,18 @@ app = Flask("Weather lorAI")
 def main():
     if request.method == "GET":
         date = request.args.to_dict()["date"]
+        print(date)
 
-        j = open("data/model_data1.json", "r")
+        j = open("../data/model_data1.json", "r")
         json_data = loads(j.read())
         data = {}
         tmp = {}
-        for date, year in json_data.items():
+        for d, year in json_data.items():
             for y, r in year.items():
                 tmp[int(y)] = r
-            data[date] = tmp.copy()
+            data[d] = tmp.copy()
 
-        program = main.Program(data)
-        lore = program.get_lore(main.Date(13, 7, 2000, 2024).loadData(data, *program.measurements))
+        program = Program(data)
+        lore = program.get_lore(Date(int(date[:2]), int(date[3:-1]), 2000, 2024).loadData(data, *program.measurements))
 
-        return f"{lore}"
+        return f"{lore}&Your mom."
