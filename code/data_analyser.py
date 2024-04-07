@@ -134,6 +134,6 @@ def percentageCorrelationCoefficient(date_1: Date, date_2: Date, measurement_1: 
     num = 0
     years = set(date_1.data.keys()).intersection(date_2.data.keys())
     for year in years:
-        if dist(date_1.data[year][measurement_1], date_2.data[year][measurement_2]) <= sqrt(date_1.variance(measurement_1) + date_2.variance(measurement_2)) * 0.5:
+        if dist(date_1.data[year][measurement_1], date_2.data[year][measurement_2]) <= sqrt(date_1.variance(measurement_1) + date_2.variance(measurement_2)) * 8:
             num += 1
     return num / len(years)

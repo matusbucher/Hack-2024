@@ -25,7 +25,7 @@
                         echo "<option value=$i.";
                         }
                         if (isset($_POST["DateD"]) && $i == $_POST["DateD"]) echo ' selected';
-                        else if ($i == date("j")) echo ' selected';
+                        else if ((! isset($_POST["DateD"])) && ($i == date("j"))) echo ' selected';
                         echo ">$i</option>\n";
                     } 
                     ?>
@@ -43,7 +43,7 @@
                         echo "<option value=$i.";
                         }
                         if (isset($_POST["DateM"]) && $i == $_POST["DateM"]) echo ' selected';
-                        else if ($i == date("n")) echo ' selected';
+                        else if ((! isset($_POST["DateM"])) && ($i == date("n"))) echo ' selected';
                         echo ">$i</option>\n";
                     } 
                     ?>
@@ -58,7 +58,7 @@
             echo "<div class='weather-result'>";
             echo "<strong>Weather lore for " . $_POST["DateD"] . $_POST["DateM"] . "<br><br> " . $response[0] . "</strong><br>";
             echo "</div>";
-            echo "<div> Reasoning: $response[1] </div>";
+            echo "<div> Reasoning:<br> $response[1] </div>";
         } 
         ?>
     </div>

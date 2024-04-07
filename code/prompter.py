@@ -2,7 +2,7 @@ import openai
 from json import loads
 from random import randrange
 
-API_KEY = "" 
+API_KEY = ""  
 client = openai.OpenAI(api_key=API_KEY)
 
 MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November",
