@@ -46,11 +46,11 @@ def globalMaximumDerivative(dates: Collection[Date], measurement: str, positive:
 
 
 def correlationCoefficient(date_1: Date, date_2: Date, measurement_1: str, measurement_2: str) -> tuple[float, float]:
+    if (date_1.get_str() == date_2.get_str() or len(years) == 0):
+        return (0, 0)
+    
     years = set(date_1.data.keys()).intersection(date_2.data.keys())
 
-    if (len(years) == 0):
-        return None
-    
     date_1_avg = date_1.averageFromYears(measurement_1, years)
     date_2_avg = date_2.averageFromYears(measurement_2, years)
     date_1_diffs = [(date_1.data[year][measurement_1] - date_1_avg) for year in years]
