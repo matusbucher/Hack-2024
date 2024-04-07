@@ -1,4 +1,4 @@
-from Date import *
+from Date import Date
 from math import sqrt
 from typing import *
 

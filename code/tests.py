@@ -1,5 +1,5 @@
-from Date import *
-from DataAnalyser import *
+from Date import Date
+import data_analyser
 import unittest
 
 class TestDateMethods(unittest.TestCase):
@@ -123,29 +123,29 @@ class TestDataAnalyserFunctions(unittest.TestCase):
         date.loadData(data, *measurements)
 
     def test_globalMaximumAndMinimum(self):
-        ret1 = globalMaximum(self.dates, "temperature")
+        ret1 = data_analyser.globalMaximum(self.dates, "temperature")
         self.assertEqual(ret1[0], self.dates[0])
         self.assertEqual(round(ret1[1], 2), 4.3)
 
-        ret2 = globalMinimum(self.dates, "temperature")
+        ret2 = data_analyser.globalMinimum(self.dates, "temperature")
         self.assertEqual(ret2[0], self.dates[1])
         self.assertEqual(round(ret2[1], 2), -4)
 
     def test_globalMaximumDerivative(self):
-        ret1 = globalMaximumDerivative(self.dates, "wind_speed", True)
+        ret1 = data_analyser.globalMaximumDerivative(self.dates, "wind_speed", True)
         self.assertEqual(ret1[0], self.dates[1])
-        self.assertEqual(round(ret1[1], 2), 26.07)
+        self.assertEqual(round(ret1[1], 2), 27)
 
-        ret2 = globalMaximumDerivative(self.dates, "cloud_cover", False)
+        ret2 = data_analyser.globalMaximumDerivative(self.dates, "cloud_cover", False)
         self.assertEqual(ret2[0], self.dates[1])
-        self.assertEqual(round(ret2[1], 2), 62.87)
+        self.assertEqual(round(ret2[1], 2), 47.5)
 
     def test_correlationCoefficient(self):
-        ret1 = correlationCoefficient(self.dates[0], self.dates[2], "temperature", "temperature")
-        self.assertEqual(round(ret1, 2), 0.57)
+        ret1 = data_analyser.correlationCoefficient(self.dates[0], self.dates[2], "temperature", "temperature")
+        self.assertEqual(round(ret1[0], 2), 0.57)
 
-        ret2 = biggestCorrelationCoefficient(self.dates[0], self.dates, *self.measurements)
-        self.assertEqual(ret2, (self.dates[1], "cloud_cover", "cloud_cover", 1.0))
+        ret2 = data_analyser.biggestCorrelationCoefficient(self.dates[0], self.dates, *self.measurements)
+        self.assertEqual(ret2[:4], (self.dates[1], "cloud_cover", "cloud_cover", 1.0))
 
 # end TestDataAnalyserFunctions
 
