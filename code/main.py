@@ -141,3 +141,7 @@ class Program:
 
         return ai.prompt_correlation_pair(corelation_day[1], corelation_day[2], last_last_date, corelation_day[3] > 0, 0)
         return "last cor"
+
+if __name__ == "__main__":
+    p = Program(None)
+    p.get_lore(Date(1, 1, 2000, 2024).loadData(None))
