@@ -1,5 +1,5 @@
-from math import sqrt
 from __future__ import annotations
+from math import sqrt
 
 class Date:
 
