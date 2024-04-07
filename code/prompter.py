@@ -1,4 +1,4 @@
-import openai
+#import openai
 from json import loads
 from random import randrange
 
@@ -21,7 +21,8 @@ MONTHS = ["January", "February", "March", "April", "May", "June", "July", "Augus
 
 def get_nameday(date) -> str:
     with open("namedays.json", "r") as file:
-        return loads(file.read())[date]
+        f = loads(file.read())
+        return f[date]
 
 
 class Fakt:
@@ -38,7 +39,7 @@ class LoreGenerator:
     def get_ai_response(self, prompt):
         pass
 
-    def prompt_growth_extreme(self, attribute, is_rising):
+    def prompt_growth_extreme(self, attribute, is_rising, is_period_year):
         attribute_names = {"cloud_cover": "amount of clouds",
                            "temperature": "temperature",
                            "wind_speed": "amount of wind",
@@ -84,6 +85,8 @@ class LoreGenerator:
                            "wind_speed": "",
                            "rain_mm": "",
                            "snow_mm": ""}
+        
+        return "I work"
 
     def prompt_correlation_pair(self, attribute1, attribute2, other_date, positive_correlation: bool, time_period) -> str:
         #  time_period: 0 for day, 1 for month, 2 for year
@@ -115,6 +118,6 @@ class LoreGenerator:
 
 generator = LoreGenerator("07.04.")
 
-print(generator.prompt_correlation_pair("cloud_cover", "temperature", 5, True, 1))
-print(generator.prompt_extreme("temperature", True, False))
-print(generator.prompt_growth_extreme("rain_mm", False))
+# print(generator.prompt_correlation_pair("cloud_cover", "temperature", 5, True, 1))
+# print(generator.prompt_extreme("temperature", True, False))
+# print(generator.prompt_growth_extreme("rain_mm", False))

@@ -23,6 +23,9 @@ class Date:
     def __repr__(self) -> str:
         return f"{self.day:02}.{self.month:02}."
     
+    def get_str(self) -> str:
+        return f"{self.day:02}.{self.month:02}."
+    
     def loadData(self, data, *measurements) -> Date:
         year = self.beginYear
         while year <= self.endYear:

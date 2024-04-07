@@ -68,7 +68,7 @@ def biggestCorrelationCoefficient(date: Date, dates: Collection[Date], *measurem
         if d != date:
             for m1 in measurements:
                 for m2 in measurements:
-                    r = correlationCoefficient(date, d, m1, m2)
+                    r = correlationCoefficient(date, d, m1, m2)[0]
                     if abs(r) > abs(biggest[3]):
                         biggest = (d, m1, m2, r)
     return biggest + (percentageCorrelationCoefficient(date, biggest[0], biggest[1], biggest[2], r),)
@@ -82,7 +82,7 @@ def hasCorrelationToDates(date: Date, dates: Collection[Date], measurement_1: st
     numNegativeCorrelation = 0
     sumCorrelCoef = 0
     for d in dates:
-        r = correlationCoefficient(date, d, measurement_1, measurement_2)
+        r = correlationCoefficient(date, d, measurement_1, measurement_2)[0]
         sumCorrelCoef += r
         if abs(r) >= minAbsCorrelCoef:
             if r > 0:
@@ -128,6 +128,6 @@ def percentageCorrelationCoefficient(date_1: Date, date_2: Date, measurement_1: 
     num = 0
     years = set(date_1.data.keys()).intersection(date_2.data.keys())
     for year in years:
-        if dist(date_1[year][measurement_1], date_2[year][measurement_2]) <= sqrt(date_1.variance(measurement_1) + date_2.variance(measurement_2)) * 0.5:
+        if dist(date_1.data[year][measurement_1], date_2.data[year][measurement_2]) <= sqrt(date_1.variance(measurement_1) + date_2.variance(measurement_2)) * 0.5:
             num += 1
     return num / len(years)
