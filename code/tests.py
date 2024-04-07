@@ -145,7 +145,7 @@ class TestDataAnalyserFunctions(unittest.TestCase):
         self.assertEqual(round(ret1, 2), 0.57)
 
         ret2 = biggestCorrelationCoefficient(self.dates[0], self.dates, *self.measurements)
-        print(ret2)
+        self.assertEqual(ret2, (self.dates[1], "cloud_cover", "cloud_cover", 1.0))
 
 # end TestDataAnalyserFunctions
 
