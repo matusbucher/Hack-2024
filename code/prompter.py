@@ -68,7 +68,7 @@ class LoreGenerator:
         if is_period_year:
             time = "the year"
         else:
-            time = MONTHS[int(self.day[3:-1])]
+            time = MONTHS[int(self.day[3:-1]) - 1]
 
         if is_maximum:
             text = max_attribute_texts[attribute]

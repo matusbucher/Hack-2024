@@ -148,6 +148,6 @@ if __name__ == "__main__":
         data[date] = tmp.copy()
 
     p = Program(data)
-    prompt = p.get_lore(Date(13, 7, 2000, 2024).loadData(data, *p.measurements))
+    prompt = p.get_lore(Date(21, 9, 2000, 2024).loadData(data, *p.measurements))
 
     print(prompt)
