@@ -2,10 +2,9 @@ import openai
 from json import loads
 from random import randrange
 
-
 #  WARNING, uncommenting loses money
 '''
-client = openai.OpenAI(api_key="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")
+client = openai.OpenAI(api_key="")
 
 completion = client.chat.completions.create(
     model="gpt-3.5-turbo",
@@ -16,6 +15,8 @@ completion = client.chat.completions.create(
     ]
 )
 '''
+MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November",
+          "December"]
 
 
 def get_nameday(date) -> str:
@@ -28,38 +29,74 @@ class Fakt:
         pass
 
 
-class TheDay:
-    def __init__(self, day: str, fakt: Fakt):
+class LoreGenerator:
+    def __init__(self, day: str):
         self.day = day
         self.lore = ""
-
         self.name = get_nameday(day)
-        #  self.fact = self.get_weather_fact()  # maybe facts
 
-    def set_weather_fact(self):
+    def get_ai_response(self, prompt):
         pass
 
-    def get_ai_response(self, name, fact_type, fact_atribute, second_name=""):
-        pass
+    def prompt_growth_extreme(self, attribute, is_rising: bool, is_period_year: bool):
+        attribute_names = {"cloud_cover": "amount of clouds",
+                           "temperature": "temperature",
+                           "wind_speed": "amount of wind",
+                           "rain_mm": "amount of rain",
+                           "snow_mm": "amount of snow"}
 
-    def prompt_extreme(self, attribute, period, is_maximum: bool) -> str:
-        pass
+        text = attribute_names[attribute]
+
+        if is_rising:
+            direction = "rise"
+        else:
+            direction = "decrease"
+
+        return f"Give me a short weather lore expressing that after the day of {self.name}'s nameday ({self.day}), the {text} should {direction} drastically, be creative, do not use the word nameday."
+
+    def prompt_extreme(self, attribute, is_period_year: bool, is_maximum: bool) -> str:
+        max_attribute_texts = {"cloud_cover": "is the least sunny one",
+                               "temperature": "is the hottest",
+                               "wind_speed": "is the windiest",
+                               "rain_mm": "is the rainiest",
+                               "snow_mm": "is the snowiest"}
+        min_attribute_texts = {"cloud_cover": "is the sunniest",
+                               "temperature": "is the coldest",
+                               "wind_speed": "is the least windy",
+                               "rain_mm": "is the least rainy",  # nedava zmysel
+                               "snow_mm": "is the least snowy"}  # nedava zmysel
+
+        if is_period_year:
+            time = "the year"
+        else:
+            time = MONTHS[int(self.day[3:-1])]
+
+        if is_maximum:
+            text = max_attribute_texts[attribute]
+        else:
+            text = min_attribute_texts[attribute]
+
+        return f"Give me a short weather lore expressing the fact, that the day of {self.name}'s nameday {text} in {time},  be creative, do not use the word nameday."
 
     #  getting input {"temperature": (True, temp_value)} # True means low variability
     def prompt_variability(self, attribute, period, is_maximum: bool) -> str:
-        pass
+        attribute_names = {"cloud_cover": "",
+                           "temperature": "",
+                           "wind_speed": "",
+                           "rain_mm": "",
+                           "snow_mm": ""}
 
-    def prompt_correlation(self, attribute1, attribute2, other_date, positive_correlation: bool) -> str:
+    def prompt_correlation_pair(self, attribute1, attribute2, other_date, positive_correlation: bool) -> str:
         #  attributes in form cloud_cover, temperature, wind_speed, rain_mm, snow_mm
         attributes_first = {"cloud_cover": "is cloudy", "temperature": "is hot", "wind_speed": "is windy",
-                           "rain_mm": "rains", "snow_mm": "snows"}
+                            "rain_mm": "rains", "snow_mm": "snows"}
 
         if positive_correlation:
             attributes_second = {"cloud_cover": "be cloudy", "temperature": "be hot", "wind_speed": "be windy",
-                                "rain_mm": "rain", "snow_mm": "snow"}
+                                 "rain_mm": "rain", "snow_mm": "snow"}
         else:
             attributes_second = {"cloud_cover": "be sunny", "temperature": "be cold", "wind_speed": "not be windy",
-                                "rain_mm": "not rain", "snow_mm": "not snow"}
+                                 "rain_mm": "not rain", "snow_mm": "not snow"}
 
         other_name = get_nameday(other_date)
 
@@ -70,10 +107,11 @@ class TheDay:
         use_verses = randrange(5) == 0
         if use_verses:
             prompt += " Make it a four verse poem."
-
         return prompt
 
 
-day = TheDay("07.04.", None)
+generator = LoreGenerator("07.04.")
 
-print(day.prompt_correlation("cloud_cover", "temperature", "08.04.", True))
+print(generator.prompt_correlation_pair("cloud_cover", "temperature", "08.04.", True))
+print(generator.prompt_extreme("temperature", True, False))
+print(generator.prompt_growth_extreme("rain_mm", False))
