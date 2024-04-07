@@ -1,45 +1,37 @@
-#import openai
+import openai
 from json import loads
 from random import randrange
-from Date import Date
 
-#  WARNING, uncommenting loses money
-'''
-client = openai.OpenAI(api_key="")
+API_KEY = ""  # insert key here
+client = openai.OpenAI(api_key=API_KEY)
 
-completion = client.chat.completions.create(
-    model="gpt-3.5-turbo",
-    messages=[
-        {"role": "system",
-         "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."},
-        {"role": "user", "content": "Compose a poem that explains the concept of recursion in programming."}
-    ]
-)
-'''
 MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November",
           "December"]
 
 
 def get_nameday(date) -> str:
     with open("namedays.json", "r") as file:
-        f = loads(file.read())
-        return f[date]
+        return loads(file.read())[date]
 
 
-class Fakt:
-    def __init__(self):
-        pass
-
-
+#  TODO word limits
+#  TODO features, extra rhymes, puns
 class LoreGenerator:
-    def __init__(self, date: Date):
-        self.date = date
-        self.date_str = date.get_str()
-        self.lore = ""
-        self.name = get_nameday(self.date_str)
+    def __init__(self, day: str):
+        self.day = day
+        self.name = get_nameday(day)
 
-    def get_ai_response(self, prompt):
-        pass
+    def get_ai_response(self, prompt) -> str:
+        prompt += " DO NOT use more than 30 words."
+
+        completion = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "user", "content": prompt}
+            ]
+        )
+
+        return completion.choices[0].message.content
 
     def prompt_growth_extreme(self, attribute, is_rising, is_period_year):
         attribute_names = {"cloud_cover": "amount of clouds",
@@ -55,7 +47,11 @@ class LoreGenerator:
         else:
             direction = "decrease"
 
-        return f"Give me a short weather lore expressing that after the day of {self.name}'s nameday ({self.date_str}), the {text} should {direction} drastically, be creative, do not use the word nameday."
+        if is_period_year:
+            prompt = f"Give me a short weather lore expressing that after the day of {self.name}'s nameday ({self.day}), the {text} should {direction} drastically, it is the most intense {direction} of the whole year. Be creative, do not use the word nameday."
+        else:
+            prompt = f"Give me a short weather lore expressing that after the day of {self.name}'s nameday ({self.day}), the {text} should {direction} drastically, be creative, do not use the word nameday."
+        return self.get_ai_response(prompt)
 
     def prompt_extreme(self, attribute, is_period_year: bool, is_maximum: bool) -> str:
         max_attribute_texts = {"cloud_cover": "is the least sunny one",
@@ -72,23 +68,33 @@ class LoreGenerator:
         if is_period_year:
             time = "the year"
         else:
-            time = MONTHS[self.date.month - 1]
+            time = MONTHS[int(self.day[3:-1])]
 
         if is_maximum:
             text = max_attribute_texts[attribute]
         else:
             text = min_attribute_texts[attribute]
 
-        return f"Give me a short weather lore expressing the fact, that the day of {self.name}'s nameday {text} in {time},  be creative, do not use the word nameday."
+        prompt = f"Give me a short weather lore expressing the fact, that the day of {self.name}'s nameday {text} in {time},  be creative, do not use the word nameday."
+        return self.get_ai_response(prompt)
 
     def prompt_variability(self, attribute, is_high, value) -> str:
-        attribute_names = {"cloud_cover": "",
-                           "temperature": "",
-                           "wind_speed": "",
-                           "rain_mm": "",
-                           "snow_mm": ""}
-        
-        return "I work"
+        attribute_names = {"cloud_cover": "amount of clouds",
+                           "temperature": "temperature",
+                           "wind_speed": "speed of wind",
+                           "rain_mm": "amount of rain",
+                           "snow_mm": "amount of snow"}
+
+        values_formatted = {"cloud_cover": f"covering around {int(value * 10)}%of the sky",
+                           "temperature": f"around {value} degrees celsius",
+                           "wind_speed": f"with speed around {round(value * 1.852, 2)} kmh",
+                           "rain_mm": f"around {value} mm",
+                           "snow_mm": f"around {value} mm"}
+        if is_high:
+            prompt = f"Give me a short weather lore, base on the fact, that the {attribute_names[attribute]} is extremely unpredictable on the day of {self.name}'s nameday. Be creative, do not use the word nameday."
+        else:
+            prompt = f"Give me a short weather lore, base on the fact, that the {attribute_names[attribute]} is extremely stable on the day of {self.name}'s nameday, {values_formatted[attribute]}. Be creative, do not use the word nameday."
+        return self.get_ai_response(prompt)
 
     def prompt_correlation_pair(self, attribute1, attribute2, other_date, positive_correlation: bool, time_period) -> str:
         #  time_period: 0 for day, 1 for month, 2 for year
@@ -105,18 +111,15 @@ class LoreGenerator:
         if time_period == 0:
             time_name = f"on the day of {get_nameday(other_date)}'s nameday"
         elif time_period == 1:
-            time_name = f"on the following {MONTHS[other_date]}"
+            time_name = f"in the following {MONTHS[other_date]}"
         else:
             time_name = f"in the following year"
 
         prompt = f"Give me a short weather lore expressing that if it {attributes_first[attribute1]} on the day of " \
-                 f"{self.name}'s namesday, it will most likely {attributes_second[attribute2]}, {time_name}, be creative, do not use the word nameday."
+                 f"{self.name}'s namesday, {time_name} it will most likely {attributes_second[attribute2]}, be creative, do not use the word nameday."
 
         use_verses = randrange(5) == 0
         if use_verses:
             prompt += " Make it a four verse poem. Do not write more than four verses."
-        return prompt
-
-# print(generator.prompt_correlation_pair("cloud_cover", "temperature", 5, True, 1))
-# print(generator.prompt_extreme("temperature", True, False))
-# print(generator.prompt_growth_extreme("rain_mm", False))
+        prompt = prompt
+        return self.get_ai_response(prompt)
