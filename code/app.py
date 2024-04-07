@@ -1,6 +1,6 @@
 from flask import Flask, request
-from random import randrange
-from time import sleep
+import main
+from json import loads
 
 app = Flask("Weather lorAI")
 
@@ -9,9 +9,17 @@ app = Flask("Weather lorAI")
 def main():
     if request.method == "GET":
         date = request.args.to_dict()["date"]
-        if randrange(2) == 0:
-            return f"When Zoltan's heavens don a cloudy attire, prepare for Albert's day to set the air on fire."
-        else:
-            return f"When Martin's namesday comes to call, expect a warmth that never falls."
 
+        j = open("data/model_data1.json", "r")
+        json_data = loads(j.read())
+        data = {}
+        tmp = {}
+        for date, year in json_data.items():
+            for y, r in year.items():
+                tmp[int(y)] = r
+            data[date] = tmp.copy()
 
+        program = main.Program(data)
+        lore = program.get_lore(main.Date(13, 7, 2000, 2024).loadData(data, *program.measurements))
+
+        return f"{lore}"
