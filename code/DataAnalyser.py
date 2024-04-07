@@ -2,32 +2,32 @@ from Date import *
 from math import sqrt
 from typing import *
 
-def globalMaximum(dates: Collection[Date], measurement: str) -> tuple[Date, float]:
+def globalMaximum(dates: Collection[Date], measurement: str) -> tuple[Date, float, float]:
     if len(dates) == 0:
         return None
     
     date = dates[0]
-    maximum = dates[0].weightedAverage(measurement)
+    maximumAvg = dates[0].weightedAverage(measurement)
     for d in dates[1:]:
-        if d.weightedAverage(measurement) > maximum:
+        if d.weightedAverage(measurement) > maximumAvg:
             date = d
-            maximum = d.weightedAverage(measurement)
-    return (date, maximum)
+            maximumAvg = d.weightedAverage(measurement)
+    return (date, maximumAvg, percentageGlobalMaximum(date, dates, measurement))
 
 
-def globalMinimum(dates: Collection[Date], measurement: str) -> tuple[Date, float]:
+def globalMinimum(dates: Collection[Date], measurement: str) -> tuple[Date, float, float]:
     if len(dates) == 0:
         return None
     
     date = dates[0]
-    minimum = dates[0].weightedAverage(measurement)
+    minimumAvg = dates[0].weightedAverage(measurement)
 
     for d in dates[1:]:
-        if d.weightedAverage(measurement) < minimum:
+        if d.weightedAverage(measurement) < minimumAvg:
             date = d
-            minimum = d.weightedAverage(measurement)
+            minimumAvg = d.weightedAverage(measurement)
 
-    return (date, minimum)
+    return (date, minimumAvg, percentageGlobalMinimum(date, dates, measurement))
 
 
 def globalMaximumDerivative(dates: Collection[Date], measurement: str, positive: bool) -> tuple[Date, float]:
@@ -35,12 +35,14 @@ def globalMaximumDerivative(dates: Collection[Date], measurement: str, positive:
         return None
     
     date = dates[0]
-    maximum = dates[0 + int(positive)].weightedAverage(measurement) - dates[1 - int(positive)].weightedAverage(measurement)
+    followingDate = dates[1]
+    maximumAvgDiff = dates[0 + int(positive)].average(measurement) - dates[1 - int(positive)].average(measurement)
     for i in range(1, len(dates) - 1):
-        if dates[i + int(positive)].weightedAverage(measurement) - dates[i+1 - int(positive)].weightedAverage(measurement) > maximum:
+        if dates[i + int(positive)].average(measurement) - dates[i+1 - int(positive)].average(measurement) > maximumAvgDiff:
             date = dates[i]
-            maximum = dates[i + int(positive)].weightedAverage(measurement) - dates[i+1 - int(positive)].weightedAverage(measurement)
-    return (date, maximum)
+            followingDate = dates[i+1]
+            maximumAvgDiff = dates[i + int(positive)].average(measurement) - dates[i+1 - int(positive)].average(measurement)
+    return (date, maximumAvgDiff, percentageGlobalMaximumDerivative(date, followingDate, measurement, positive, maximumAvgDiff + (-1)**(int(positive)) * (abs(maximumAvgDiff) * 0.1)))
 
 def correlationCoefficient(date_1: Date, date_2: Date, measurement_1: str, measurement_2: str) -> float:
     years = set(date_1.data.keys()).intersection(date_2.data.keys())
@@ -90,3 +92,29 @@ def hasCorrelationToDates(date: Date, dates: Collection[Date], measurement_1: st
     if abs(avgCorrelCoef) >= minAbsCorrelCoef and (numPositiveCorrelation / len(dates) >= minPercentage or numNegativeCorrelation / len(dates) >= minPercentage):
         return (True, avgCorrelCoef)
     return (False, 0)
+
+
+def percentageGlobalMaximum(date: Date, dates: Collection[Date], measurement: str) -> float:
+    num = 0
+    for year in date.data:
+        if date.data[year][measurement] == max([d.data[year][measurement] for d in dates if year in d.data]):
+            num += 1
+    return num / len(date.data)
+
+
+def percentageGlobalMinimum(date: Date, dates: Collection[Date], measurement: str) -> float:
+    num = 0
+    for year in date.data:
+        if date.data[year][measurement] == min([d.data[year][measurement] for d in dates if year in d.data]):
+            num += 1
+    return num / len(date.data)
+
+
+def percentageGlobalMaximumDerivative(date: Date, followingDate: Date, measurement: str, positive: bool, minDiff: float) -> float:
+    num = 0
+    years = set(date.data.keys()).intersection(followingDate.data.keys())
+    for year in years:
+        diff = followingDate.data[year][measurement] - date.data[year][measurement] if positive else date.data[year][measurement] - followingDate.data[year][measurement]
+        if diff >= minDiff:
+                num += 1
+    return num / len(years)

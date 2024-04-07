@@ -16,7 +16,7 @@
             <div class="form-group">
                 <label for="DateD">Day:</label>
                 <select name="DateD" id="DateD" class="form-control">
-                    <?php 
+                    <?php
                     for($i = 1; $i <= 31; $i++) {
                         if ($i < 10) {
                             echo "<option value=0$i";
@@ -24,7 +24,8 @@
                         else {
                         echo "<option value=$i";
                         }
-                        if ($i == date("j")) echo ' selected';
+                        if (isset($_POST["DateD"]) && $i == $_POST["DateD"]) echo ' selected';
+                        else if ($i == date("j")) echo ' selected';
                         echo ">$i</option>\n";
                     } 
                     ?>
@@ -41,7 +42,8 @@
                         else {
                         echo "<option value=$i";
                         }
-                        if ($i == date("n")) echo ' selected';
+                        if (isset($_POST["DateM"]) && $i == $_POST["DateM"]) echo ' selected';
+                        else if ($i == date("n")) echo ' selected';
                         echo ">$i</option>\n";
                     } 
                     ?>
@@ -54,7 +56,7 @@
             $api_url = "http://127.0.0.1:5000/?date=".$_POST["DateD"].$_POST["DateM"];
             $response = file_get_contents($api_url);
             echo "<div class='weather-result'>";
-            echo "<strong>Weather lore for " . $_POST["DateD"]. "." . $_POST["DateM"] . "." . ":<br> " . $response . "</strong>";
+            echo "<strong>Weather lore for " . $_POST["DateD"]. "." . $_POST["DateM"] . "." . "<br><br> " . $response . "</strong>";
             echo "</div>";
         } 
         ?>
