@@ -1,5 +1,7 @@
 from Date import Date
 import DataAnalyser
+from random import choice
+import prompter
 
 class Program:
     """
@@ -53,10 +55,10 @@ class Program:
         return {m:DataAnalyser.globalMaximumDerivative(self.dates[sum(dayCounts[:month]):sum(dayCounts[:month + 1])], m, False) for m in self.measurements}
     
     def globalMaximumCorrelation(self): #Returns dict of global biggest cor. coef. for all days
-        return {d:DataAnalyser.biggestCorrelationCoefficient(d, self.dates, self.measurements) for d in self.dates}
+        return {d:DataAnalyser.biggestCorrelationCoefficient(d, self.dates, *self.measurements) for d in self.dates}
     
     def day_variences(self, date: Date): #Returns dict of measurments[tuple[bool, avg for day]], true - stable, false - unstable
-        magic_coefs = {"cloud_cover": 0.1, "temperature": 3, "wind_speed": 3, "rain_mm": 0.2, "snow_mm": 0.2}
+        magic_coefs = {"cloud_cover": 0.01, "temperature": 1, "wind_speed": 1, "rain_mm": 0.05, "snow_mm": 0.05}
         d = {}
         for measurement in self.measurements:
             variation = date.standardDeviation(measurement)
@@ -67,3 +69,75 @@ class Program:
 
         return d
     
+    def get_lore(self, date: Date):
+        s_date = f"{date.day:02}.{date.month:02}."
+        generator = prompter.LoreGenerator(s_date)
+
+        dayCounts = [31,28,31,30,31,30,31,31,30,31,30,31]
+        ai = prompter.LoreGenerator(s_date)
+
+        maxima = self.globalMaxima()
+        print(maxima)
+        minima = self.globalMinima()
+
+        for meas in self.measurements:
+            if maxima[meas][0].get_str() == s_date:
+                return ai.prompt_extreme(meas, True, True)
+            
+            if minima[meas][0].get_str() == s_date:
+                return ai.prompt_extreme(meas, True, False)
+        
+        
+        # variences = self.day_variences(date)
+        #if variences != {}:
+        #    meas = choice(list(variences.keys()))
+        #    return ai.prompt_variability(meas, variences[meas][0], variences[meas][1])
+        
+        month_maxima = self.monthMaxima(date.month)
+        month_minima = self.monthMinima(date.month)
+
+        for meas in self.measurements:
+            if month_maxima[meas][0].get_str() == s_date:
+                return ai.prompt_extreme(meas, False, True)
+            
+            if month_minima[meas][0].get_str() == s_date:
+                return ai.prompt_extreme(meas, False, False)
+        
+        der_maxima = self.globalMaximumDerivative()
+        der_minima = self.globalMinimumDerivative()
+
+        for meas in self.measurements:
+            if der_maxima[meas][0].get_str() == s_date:
+                return ai.prompt_growth_extreme(meas, True, True)
+            
+            if der_minima[meas][0].get_str() == s_date:
+                return ai.prompt_growth_extreme(meas, False, True)
+        
+        month_der_maxima = self.monthMaximumDerivate(date.month)
+        month_der_minima = self.monthMinimumDerivate(date.month)
+
+        for meas in self.measurements:
+            if month_der_maxima[meas][0].get_str() == s_date:
+                return ai.prompt_growth_extreme(meas, True, False)
+            
+            if month_der_minima[meas][0].get_str() == s_date:
+                return ai.prompt_growth_extreme(meas, False, False)
+        
+        for meas1 in self.measurements:
+            for meas2 in self.measurements:
+                #corelation_year = DataAnalyser.hasCorrelationToDates(date, self.dates,meas1, meas2, 0.6, 0.6)
+                #if corelation_year[0]:
+                #    return ai.prompt_correlation_pair(meas1, meas2, date.month, corelation_month[1] > 0, 2)
+
+                corelation_month = (DataAnalyser.hasCorrelationToDates(date, self.dates[sum(dayCounts[:date.month - 1]):sum(dayCounts[:date.month])], meas1, meas2, 0.6, 0.6))
+                if corelation_month[0]:
+                    return ai.prompt_correlation_pair(meas1, meas2, date.month, corelation_month[1] > 0, 1)
+                
+        corelation_day = DataAnalyser.biggestCorrelationCoefficient(date, self.dates, *self.measurements)
+
+        last_d = corelation_day[0]
+        last_last_date = f"{last_d.day:02}.{last_d.month:02}."
+
+
+        return ai.prompt_correlation_pair(corelation_day[1], corelation_day[2], last_last_date, corelation_day[3] > 0, 0)
+        return "last cor"
