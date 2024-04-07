@@ -19,10 +19,10 @@
                     <?php
                     for($i = 1; $i <= 31; $i++) {
                         if ($i < 10) {
-                            echo "<option value=0$i";
+                            echo "<option value=0$i.";
                         }
                         else {
-                        echo "<option value=$i";
+                        echo "<option value=$i.";
                         }
                         if (isset($_POST["DateD"]) && $i == $_POST["DateD"]) echo ' selected';
                         else if ($i == date("j")) echo ' selected';
@@ -37,10 +37,10 @@
                     <?php 
                     for($i = 1; $i <= 12; $i++) {
                         if ($i < 10) {
-                            echo "<option value=0$i";
+                            echo "<option value=0$i.";
                         }
                         else {
-                        echo "<option value=$i";
+                        echo "<option value=$i.";
                         }
                         if (isset($_POST["DateM"]) && $i == $_POST["DateM"]) echo ' selected';
                         else if ($i == date("n")) echo ' selected';
@@ -56,7 +56,7 @@
             $api_url = "http://127.0.0.1:5000/?date=".$_POST["DateD"].$_POST["DateM"];
             $response = explode("&", file_get_contents($api_url));
             echo "<div class='weather-result'>";
-            echo "<strong>Weather lore for " . $_POST["DateD"]. "." . $_POST["DateM"] . "." . "<br><br> " . $response[0] . "</strong><br>";
+            echo "<strong>Weather lore for " . $_POST["DateD"] . $_POST["DateM"] . "<br><br> " . $response[0] . "</strong><br>";
             echo "</div>";
             echo "<div> Reasoning: $response[1] </div>";
         } 

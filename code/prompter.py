@@ -2,7 +2,7 @@ import openai
 from json import loads
 from random import randrange
 
-API_KEY = ""  # insert key here
+API_KEY = "" 
 client = openai.OpenAI(api_key=API_KEY)
 
 MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November",
@@ -10,7 +10,7 @@ MONTHS = ["January", "February", "March", "April", "May", "June", "July", "Augus
 
 
 def get_nameday(date) -> str:
-    with open("namedays.json", "r") as file:
+    with open("../namedays.json", "r") as file:
         return loads(file.read())[date]
 
 
