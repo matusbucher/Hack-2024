@@ -58,7 +58,7 @@
             echo "<div class='weather-result'>";
             echo "<strong>Weather lore for " . $_POST["DateD"] . $_POST["DateM"] . "<br><br> " . $response[0] . "</strong><br>";
             echo "</div>";
-            echo "<div> Reasoning: $response[1] </div>";
+            echo "<div> Reasoning:<br> $response[1] </div>";
         } 
         ?>
     </div>

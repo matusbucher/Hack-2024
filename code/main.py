@@ -86,10 +86,10 @@ class Program:
 
         for meas in self.measurements:
             if maxima[meas][0].get_str() == date.get_str():
-                return (ai.prompt_extreme(meas, True, True), f"{date} was yearly maximum in measurement: {self.MEASUREMENTS[meas]} in {round(maxima[meas][2]*100, 2)}% of years.")
+                return (ai.prompt_extreme(meas, True, True), f"{date} was yearly maximum in  {self.MEASUREMENTS[meas]} in {round(maxima[meas][2]*100, 2)}% of years.")
             
             if minima[meas][0].get_str() == date.get_str():
-                return (ai.prompt_extreme(meas, True, False), f"{date} was yearly minimum in measurement: {self.MEASUREMENTS[meas]} in {round(minima[meas][2]*100, 2)}% of years.")
+                return (ai.prompt_extreme(meas, True, False), f"{date} was yearly minimum in  {self.MEASUREMENTS[meas]} in {round(minima[meas][2]*100, 2)}% of years.")
         
         
         #variences = self.day_variences(date)
@@ -102,30 +102,30 @@ class Program:
 
         for meas in self.measurements:
             if month_maxima[meas][0].get_str() == date.get_str():
-                return (ai.prompt_extreme(meas, False, True), f"{date} was monthly maximum in measurement: {self.MEASUREMENTS[meas]} in {round(month_maxima[meas][2]*100, 2)}% of years.")
+                return (ai.prompt_extreme(meas, False, True), f"{date} was monthly maximum in  {self.MEASUREMENTS[meas]} in {round(month_maxima[meas][2]*100, 2)}% of years.")
             
             if month_minima[meas][0].get_str() == date.get_str():
-                return (ai.prompt_extreme(meas, False, False), f"{date} was monthly minimum in measurement: {self.MEASUREMENTS[meas]} in {round(month_minima[meas][2]*100, 2)}% of years.")
+                return (ai.prompt_extreme(meas, False, False), f"{date} was monthly minimum in  {self.MEASUREMENTS[meas]} in {round(month_minima[meas][2]*100, 2)}% of years.")
         
         der_maxima = self.globalMaximumDerivative()
         der_minima = self.globalMinimumDerivative()
 
         for meas in self.measurements:
             if der_maxima[meas][0].get_str() == date.get_str():
-                return (ai.prompt_growth_extreme(meas, True, True), f"{date} has the highest increase in measurement: {self.MEASUREMENTS[meas]} over whole year in {round(der_maxima[meas][2]*100, 2)}% of years.")
+                return (ai.prompt_growth_extreme(meas, True, True), f"{date} has the highest increase in  {self.MEASUREMENTS[meas]} over whole year in {round(der_maxima[meas][2]*100, 2)}% of years.")
             
             if der_minima[meas][0].get_str() == date.get_str():
-                return (ai.prompt_growth_extreme(meas, False, True), f"{date} has the highest decrease in measurement: {self.MEASUREMENTS[meas]} over whole year in {round(der_minima[meas][2]*100, 2)}% of years.")
+                return (ai.prompt_growth_extreme(meas, False, True), f"{date} has the highest decrease in  {self.MEASUREMENTS[meas]} over whole year in {round(der_minima[meas][2]*100, 2)}% of years.")
         
         month_der_maxima = self.monthMaximumDerivate(date.month)
         month_der_minima = self.monthMinimumDerivate(date.month)
 
         for meas in self.measurements:
             if month_der_maxima[meas][0].get_str() == date.get_str():
-                return (ai.prompt_growth_extreme(meas, True, False), f"{date} has the highest increase in measurement: {self.MEASUREMENTS[meas]} over the month in {round(month_der_maxima[meas][2]*100, 2)}% of years.")
+                return (ai.prompt_growth_extreme(meas, True, False), f"{date} has the highest increase in  {self.MEASUREMENTS[meas]} over the month in {round(month_der_maxima[meas][2]*100, 2)}% of years.")
             
             if month_der_minima[meas][0].get_str() == date.get_str():
-                return (ai.prompt_growth_extreme(meas, False, False), f"{date} has the highest decrease in measurement: {self.MEASUREMENTS[meas]} over the month in {round(month_der_minima[meas][2]*100, 2)}% of years.")
+                return (ai.prompt_growth_extreme(meas, False, False), f"{date} has the highest decrease in  {self.MEASUREMENTS[meas]} over the month in {round(month_der_minima[meas][2]*100, 2)}% of years.")
         
         for meas1 in self.measurements:
             for meas2 in self.measurements:
@@ -142,7 +142,7 @@ class Program:
         last_d = corelation_day[0]
         last_last_date = f"{last_d.day:02}.{last_d.month:02}."
 
-        return (ai.prompt_correlation_pair(corelation_day[1], corelation_day[2], last_last_date, corelation_day[3] > 0, 0), f"Measurement: {self.MEASUREMENTS[corelation_day[1]]} at {date} and measurement: {self.MEASUREMENTS[corelation_day[2]]} at {last_last_date} had strong {'positive' if corelation_day[3] > 0 else 'negative'} correlation in {round(corelation_day[4]*100, 2)}% of years.")
+        return (ai.prompt_correlation_pair(corelation_day[1], corelation_day[2], last_last_date, corelation_day[3] > 0, 0), f" {self.MEASUREMENTS[corelation_day[1]]} at {date} and  {self.MEASUREMENTS[corelation_day[2]]} at {last_last_date} had strong {'positive' if corelation_day[3] > 0 else 'negative'} correlation in {round(corelation_day[4]*100, 2)}% of years.")
 
 if __name__ == "__main__":
     j = open("../data/model_data1.json", "r")

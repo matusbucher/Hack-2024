@@ -25,4 +25,4 @@ def main():
 
         print(lore)
 
-        return f"{lore[0]}&{lore[1]}"
+        return f"{lore[0]}&{lore[1].capitalize()}"
