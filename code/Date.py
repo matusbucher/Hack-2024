@@ -1,4 +1,5 @@
 from math import sqrt
+from __future__ import annotations
 
 class Date:
 
@@ -22,12 +23,13 @@ class Date:
     def __repr__(self) -> str:
         return f"{self.day:02}.{self.month:02}."
     
-    def loadData(self, data, *measurements) -> None:
+    def loadData(self, data, *measurements) -> Date:
         year = self.beginYear
         while year <= self.endYear:
             if year in [int(y) for y in data[f"{self.day:02}.{self.month:02}."].keys()]:
                 self.data[year] = {m:data[f"{self.day:02}.{self.month:02}."][str(year)][m] for m in measurements}
             year += 1
+        return self
 
     def stefiho_loadData(self, data, measurements) -> None:
         year = self.beginYear
