@@ -31,6 +31,13 @@ class Date:
             year += 1
         return self
 
+    def stefiho_loadData(self, data, measurements) -> None:
+        year = self.beginYear
+        while year <= self.endYear:
+            if year in [int(y) for y in data[f"{self.day:02}.{self.month:02}."].keys()]:
+                self.data[year] = {m:data[f"{self.day:02}.{self.month:02}."][str(year)][m] for m in measurements}
+            year += 1
+
     def weightedAverage(self, measurement) -> float:
         weightsDifference = 1
         rateIncrement = weightsDifference / (self.endYear - self.beginYear)
