@@ -1,6 +1,7 @@
 from Date import Date
 import DataAnalyser
 from random import choice
+import prompter
 
 class Program:
     """
@@ -71,102 +72,68 @@ class Program:
     def get_lore(self, date: Date):
         s_date = f"{date.day:02}.{date.month:02}."
         dayCounts = [31,28,31,30,31,30,31,31,30,31,30,31]
+        ai = prompter.LoreGenerator(s_date)
 
-        maximum = None
         maxima = self.globalMaxima()
-
-        minimum = None
         minima = self.globalMinima()
 
         for meas in self.measurements:
             if maxima[meas][0] == s_date:
-                maximum = maxima[meas][1]
+                return ai.prompt_extreme(meas, True, True)
             
             if minima[meas][0] == s_date:
-                minimum = minima[meas][1]
+                return ai.prompt_extreme(meas, True, False)
         
-
-        if minimum is not None:
-            if maximum is not None and abs(minimum) < abs(maximum):
-                # call abs maximum
-                pass
-            else:
-                # call abs minimum
-                pass
         
         variences = self.day_variences(date)
         if variences != {}:
             meas = choice(variences.keys())
-            # call varience with variences[meas]
+            return ai.prompt_variability(meas, variences[meas][0], variences[meas][1])
         
-        month_maximum = None
         month_maxima = self.monthMaxima(date.month)
-        month_minimum = None
         month_minima = self.monthMinima(date.month)
 
         for meas in self.measurements:
             if month_maxima[meas][0] == s_date:
-                month_maximum = month_maxima[meas][1]
+                return ai.prompt_extreme(meas, False, True)
             
             if month_minima[meas][0] == s_date:
-                month_minimum = month_minima[meas][1]
-
-        if month_minimum is not None:
-            if month_maximum is not None and abs(month_minimum) < abs(month_maximum):
-                # call month maximum
-                pass
-            else:
-                # call month minimum
-                pass
+                return ai.prompt_extreme(meas, False, False)
         
-        der_maximum = None
         der_maxima = self.globalMaximumDerivative(date.month)
-        der_minimum = None
         der_minima = self.globalMinimumDerivative(date.month)
 
         for meas in self.measurements:
             if der_maxima[meas][0] == s_date:
-                der_maximum = der_maxima[meas][1]
+                return ai.prompt_growth_extreme(meas, True, True)
             
             if der_minima[meas][0] == s_date:
-                der_minimum = der_minima[meas][1]
-
-        if der_minimum is not None:
-            if der_maximum is not None and abs(der_minimum) < abs(der_maximum):
-                # call abs der maximum
-                pass
-            else:
-                # call abd der minimum
-                pass
+                return ai.prompt_growth_extreme(meas, False, True)
         
-        month_der_maximum = None
         month_der_maxima = self.monthMaxima(date.month)
-        month_der_minimum = None
         month_der_minima = self.monthMinima(date.month)
 
         for meas in self.measurements:
             if month_der_maxima[meas][0] == s_date:
-                month_der_maximum = month_der_maxima[meas][1]
+                return ai.prompt_growth_extreme(meas, True, False)
             
             if month_der_minima[meas][0] == s_date:
-                month_der_minimum = month_der_minima[meas][1]
-
-        if month_der_minimum is not None:
-            if month_der_maximum is not None and abs(month_der_minimum) < abs(month_der_maximum):
-                # call month der maximum
-                pass
-            else:
-                # call month der minimum
-                pass
+                return ai.prompt_growth_extreme(meas, False, False)
         
         for meas1 in self.measurements:
             for meas2 in self.measurements:
+                corelation_year = DataAnalyser.hasCorrelationToDates(date, self.dates,meas1, meas2, 0.6, 0.6)
+                if corelation_year[0]:
+                    return ai.prompt_correlation_pair(meas1, meas2, date.month, corelation_month[1] > 0, 2)
 
                 corelation_month = (DataAnalyser.hasCorrelationToDates(date, self.dates[sum(dayCounts[:date.month - 1]):sum(dayCounts[:date.month])], meas1, meas2, 0.6, 0.6))
+                if corelation_month[0]:
+                    return ai.prompt_correlation_pair(meas1, meas2, date.month, corelation_month[1] > 0, 1)
                 
-                corelation_year = DataAnalyser.hasCorrelationToDates(date, self.dates,meas1, meas2, 0.6, 0.6)
-
         corelation_day = DataAnalyser.biggestCorrelationCoefficient(date, self.dates, self.measurements)
+
+        return ai.prompt_correlation_pair(corelation_day[1], corelation_day[2], corelation_day[0], corelation_day[3] > 0, 0)
+
         
         
 
