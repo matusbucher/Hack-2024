@@ -71,7 +71,7 @@ class Program:
     
     def get_lore(self, date: Date):
         dayCounts = [31,28,31,30,31,30,31,31,30,31,30,31]
-        ai = prompter.LoreGenerator(date)
+        ai = prompter.LoreGenerator(date.get_str())
 
         maxima = self.globalMaxima()
         minima = self.globalMinima()
