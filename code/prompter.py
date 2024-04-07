@@ -116,7 +116,3 @@ class LoreGenerator:
         if use_verses:
             prompt += " Make it a four verse poem. Do not write more than four verses."
         return prompt
-
-# print(generator.prompt_correlation_pair("cloud_cover", "temperature", 5, True, 1))
-# print(generator.prompt_extreme("temperature", True, False))
-# print(generator.prompt_growth_extreme("rain_mm", False))

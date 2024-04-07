@@ -1,5 +1,4 @@
 from json import dumps, loads
-import unidecode
 
 new = {}
 
