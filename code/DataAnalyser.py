@@ -74,9 +74,9 @@ def biggestCorrelationCoefficient(date: Date, dates: Collection[Date], *measurem
     return biggest + (percentageCorrelationCoefficient(date, biggest[0], biggest[1], biggest[2], r),)
 
 
-def hasCorrelationToDates(date: Date, dates: Collection[Date], measurement_1: str, measurement_2: str, minAbsCorrelCoef: float, minPercentage: float) -> tuple[bool, float]:
+def hasCorrelationToDates(date: Date, dates: Collection[Date], measurement_1: str, measurement_2: str, minAbsCorrelCoef: float, minPercentage: float) -> tuple[bool, float, float]:
     if minAbsCorrelCoef < -1 or minAbsCorrelCoef > 1 or minPercentage > 1 or minPercentage <= 0.5:
-        return (False, 0)
+        return (False, 0, 0)
     
     numPositiveCorrelation = 0
     numNegativeCorrelation = 0
@@ -91,9 +91,13 @@ def hasCorrelationToDates(date: Date, dates: Collection[Date], measurement_1: st
                 numNegativeCorrelation += 1
     avgCorrelCoef = sumCorrelCoef / len(dates)
     
-    if abs(avgCorrelCoef) >= minAbsCorrelCoef and (numPositiveCorrelation / len(dates) >= minPercentage or numNegativeCorrelation / len(dates) >= minPercentage):
-        return (True, avgCorrelCoef)
-    return (False, 0)
+    if abs(avgCorrelCoef) >= minAbsCorrelCoef:
+        if numPositiveCorrelation / len(dates) >= minPercentage:
+            return (True, avgCorrelCoef, numPositiveCorrelation / len(dates))
+        elif numNegativeCorrelation / len(dates) >= minPercentage:
+            return (True, avgCorrelCoef, numNegativeCorrelation / len(dates))
+    
+    return (False, 0, 0)
 
 
 def percentageGlobalMaximum(date: Date, dates: Collection[Date], measurement: str) -> float:
