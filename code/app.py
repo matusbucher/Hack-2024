@@ -4,9 +4,9 @@ from random import randrange
 app = Flask("Weather lorAI")
 
 
-@app.route("/", methods=["POST"])
+@app.route("/", methods=["GET"])
 def main():
-    if request.method == "POST":
+    if request.method == "GET":
         date = request.args.to_dict()["date"]
         if randrange(2) == 0:
             return f"When Zoltan's heavens don a cloudy attire, prepare for Albert's day to set the air on fire.\n{date}"

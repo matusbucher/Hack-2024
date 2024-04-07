@@ -6,8 +6,8 @@
 <body>
     <?php
     if (isset($_POST["submit"])) {
-		$api_url = "https://api.com/?date=".$_POST["DateD"].$_POST["DateM"];
-
+		$api_url = "http://127.0.0.1:5000/?date=".$_POST["DateD"].$_POST["DateM"];
+        
         $response = file_get_contents($api_url);
 
         echo "Weather lore for ".$_POST["DateD"].$_POST["DateM"].": ".$response;
