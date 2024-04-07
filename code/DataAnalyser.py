@@ -30,7 +30,7 @@ def globalMinimum(dates: Collection[Date], measurement: str) -> tuple[Date, floa
     return (date, minimumAvg, percentageGlobalMinimum(date, dates, measurement))
 
 
-def globalMaximumDerivative(dates: Collection[Date], measurement: str, positive: bool) -> tuple[Date, float]:
+def globalMaximumDerivative(dates: Collection[Date], measurement: str, positive: bool) -> tuple[Date, float, float]:
     if len(dates) <= 1 or not isinstance(positive, bool):
         return None
     
@@ -44,7 +44,8 @@ def globalMaximumDerivative(dates: Collection[Date], measurement: str, positive:
             maximumAvgDiff = dates[i + int(positive)].average(measurement) - dates[i+1 - int(positive)].average(measurement)
     return (date, maximumAvgDiff, percentageGlobalMaximumDerivative(date, followingDate, measurement, positive, maximumAvgDiff + (-1)**(int(positive)) * (abs(maximumAvgDiff) * 0.1)))
 
-def correlationCoefficient(date_1: Date, date_2: Date, measurement_1: str, measurement_2: str) -> float:
+
+def correlationCoefficient(date_1: Date, date_2: Date, measurement_1: str, measurement_2: str) -> tuple[float, float]:
     years = set(date_1.data.keys()).intersection(date_2.data.keys())
 
     if (len(years) == 0):
@@ -57,11 +58,11 @@ def correlationCoefficient(date_1: Date, date_2: Date, measurement_1: str, measu
     numerator = sum([date_1_diffs[i] * date_2_diffs[i] for i in range(len(years))])
     denominator = sqrt(sum(diff**2 for diff in date_1_diffs) * sum(diff**2 for diff in date_2_diffs))
 
-    if denominator == 0:
-        return 0
-    return numerator / denominator
+    coefficient = 0 if denominator == 0 else numerator / denominator
+    return (coefficient, percentageCorrelationCoefficient(date_1, date_2, measurement_1, measurement_2, coefficient))
 
-def biggestCorrelationCoefficient(date: Date, dates: Collection[Date], *measurements: str) -> tuple[Date, str, str, float]:
+
+def biggestCorrelationCoefficient(date: Date, dates: Collection[Date], *measurements: str) -> tuple[Date, str, str, float, float]:
     biggest = (None, "-", "-", 0)
     for d in dates:
         if d != date:
@@ -70,7 +71,8 @@ def biggestCorrelationCoefficient(date: Date, dates: Collection[Date], *measurem
                     r = correlationCoefficient(date, d, m1, m2)
                     if abs(r) > abs(biggest[3]):
                         biggest = (d, m1, m2, r)
-    return biggest
+    return biggest + (percentageCorrelationCoefficient(date, biggest[0], biggest[1], biggest[2], r),)
+
 
 def hasCorrelationToDates(date: Date, dates: Collection[Date], measurement_1: str, measurement_2: str, minAbsCorrelCoef: float, minPercentage: float) -> tuple[bool, float]:
     if minAbsCorrelCoef < -1 or minAbsCorrelCoef > 1 or minPercentage > 1 or minPercentage <= 0.5:
@@ -117,4 +119,15 @@ def percentageGlobalMaximumDerivative(date: Date, followingDate: Date, measureme
         diff = followingDate.data[year][measurement] - date.data[year][measurement] if positive else date.data[year][measurement] - followingDate.data[year][measurement]
         if diff >= minDiff:
                 num += 1
+    return num / len(years)
+
+
+def percentageCorrelationCoefficient(date_1: Date, date_2: Date, measurement_1: str, measurement_2: str, coefficient: float) -> float:
+    q = date_2.average(measurement_2) - coefficient * date_1.average(measurement_1)
+    dist = lambda x, y : abs(y - coefficient*x + q) / sqrt(coefficient**2 + 1)
+    num = 0
+    years = set(date_1.data.keys()).intersection(date_2.data.keys())
+    for year in years:
+        if dist(date_1[year][measurement_1], date_2[year][measurement_2]) <= sqrt(date_1.variance(measurement_1) + date_2.variance(measurement_2)) * 0.5:
+            num += 1
     return num / len(years)
