@@ -54,7 +54,7 @@
             $api_url = "http://127.0.0.1:5000/?date=".$_POST["DateD"].$_POST["DateM"];
             $response = file_get_contents($api_url);
             echo "<div class='weather-result'>";
-            echo "<strong>Weather lore for " . $_POST["DateD"]. "." . $_POST["DateM"] . "." . ":<br> " . $response . "</strong>";
+            echo "<strong>Weather lore for " . $_POST["DateD"]. "." . $_POST["DateM"] . "." . "<br><br> " . $response . "</strong>";
             echo "</div>";
         } 
         ?>
