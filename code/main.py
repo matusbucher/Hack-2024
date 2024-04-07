@@ -1,6 +1,7 @@
 from Date import Date
 import DataAnalyser
 from random import choice
+import prompter
 
 class Program:
     """
@@ -70,6 +71,8 @@ class Program:
     
     def get_lore(self, date: Date):
         s_date = f"{date.day:02}.{date.month:02}."
+        generator = prompter.LoreGenerator(s_date)
+
         dayCounts = [31,28,31,30,31,30,31,31,30,31,30,31]
 
         maximum = None

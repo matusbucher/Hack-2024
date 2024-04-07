@@ -38,7 +38,7 @@ class LoreGenerator:
     def get_ai_response(self, prompt):
         pass
 
-    def prompt_growth_extreme(self, attribute, is_rising: bool, is_period_year: bool):
+    def prompt_growth_extreme(self, attribute, is_rising):
         attribute_names = {"cloud_cover": "amount of clouds",
                            "temperature": "temperature",
                            "wind_speed": "amount of wind",
@@ -78,16 +78,15 @@ class LoreGenerator:
 
         return f"Give me a short weather lore expressing the fact, that the day of {self.name}'s nameday {text} in {time},  be creative, do not use the word nameday."
 
-    #  getting input {"temperature": (True, temp_value)} # True means low variability
-    def prompt_variability(self, attribute, period, is_maximum: bool) -> str:
+    def prompt_variability(self, attribute, is_high, value) -> str:
         attribute_names = {"cloud_cover": "",
                            "temperature": "",
                            "wind_speed": "",
                            "rain_mm": "",
                            "snow_mm": ""}
 
-    def prompt_correlation_pair(self, attribute1, attribute2, other_date, positive_correlation: bool) -> str:
-        #  attributes in form cloud_cover, temperature, wind_speed, rain_mm, snow_mm
+    def prompt_correlation_pair(self, attribute1, attribute2, other_date, positive_correlation: bool, time_period) -> str:
+        #  time_period: 0 for day, 1 for month, 2 for year
         attributes_first = {"cloud_cover": "is cloudy", "temperature": "is hot", "wind_speed": "is windy",
                             "rain_mm": "rains", "snow_mm": "snows"}
 
@@ -98,20 +97,24 @@ class LoreGenerator:
             attributes_second = {"cloud_cover": "be sunny", "temperature": "be cold", "wind_speed": "not be windy",
                                  "rain_mm": "not rain", "snow_mm": "not snow"}
 
-        other_name = get_nameday(other_date)
+        if time_period == 0:
+            time_name = f"on the day of {get_nameday(other_date)}'s nameday"
+        elif time_period == 1:
+            time_name = f"on the following {MONTHS[other_date]}"
+        else:
+            time_name = f"in the following year"
 
         prompt = f"Give me a short weather lore expressing that if it {attributes_first[attribute1]} on the day of " \
-                 f"{self.name}'s namesday, it will most likely {attributes_second[attribute2]} on the day of " \
-                 f"{other_name}'s namesday, be creative, do not use the word nameday."
+                 f"{self.name}'s namesday, it will most likely {attributes_second[attribute2]}, {time_name}, be creative, do not use the word nameday."
 
         use_verses = randrange(5) == 0
         if use_verses:
-            prompt += " Make it a four verse poem."
+            prompt += " Make it a four verse poem. Do not write more than four verses."
         return prompt
 
 
 generator = LoreGenerator("07.04.")
 
-print(generator.prompt_correlation_pair("cloud_cover", "temperature", "08.04.", True))
+print(generator.prompt_correlation_pair("cloud_cover", "temperature", 5, True, 1))
 print(generator.prompt_extreme("temperature", True, False))
 print(generator.prompt_growth_extreme("rain_mm", False))
