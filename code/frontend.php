@@ -6,7 +6,7 @@
 <body>
     <?php
     if (isset($_POST["submit"])) {
-		$api_url = "https://api.com/".$_POST["DateD"].$_POST["DateM"];
+		$api_url = "https://api.com/?date=".$_POST["DateD"].$_POST["DateM"];
 
         $response = file_get_contents($api_url);
 
